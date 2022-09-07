@@ -25,7 +25,9 @@ import com.google.common.collect.Lists;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.events.*;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.util.ChangeTracked;
 import com.sk89q.worldguard.util.Normal;
@@ -223,6 +225,30 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
         this.parent = null;
     }
 
+    public void addOwners(DefaultDomain owners){
+        addOwners(owners,true);
+    }
+    public void addOwners(DefaultDomain owners, boolean callEvent){
+        this.getOwners().addAll(owners);
+
+        if (callEvent){
+            WorldGuard.getInstance().getEventManager()
+                    .call(new AddRegionOwnersEvent(this,owners));
+        }
+    }
+
+    public void removeOwners(DefaultDomain owners){
+        removeOwners(owners,true);
+    }
+    public void removeOwners(DefaultDomain owners, boolean callEvent){
+        this.getOwners().removeAll(owners);
+
+        //call event
+        if (callEvent)
+            WorldGuard.getInstance().getEventManager()
+                .call(new RemoveRegionOwnersEvent(this,owners));
+    }
+
     /**
      * Get the domain that contains the owners of this region.
      *
@@ -252,7 +278,27 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
     public DefaultDomain getMembers() {
         return members;
     }
+    public void removeMembers(DefaultDomain members) {
+        removeMembers(members,true);
+    }
+    public void removeMembers(DefaultDomain members, boolean callEvent){
+        this.getMembers().removeAll(members);
 
+        if (callEvent)
+            WorldGuard.getInstance().getEventManager()
+                .call(new RemoveRegionMembersEvent(this,members));
+    }
+
+    public void addMembers(DefaultDomain members){
+        addMembers(members,true);
+    }
+    public void addMembers(DefaultDomain members, boolean callEvent){
+        this.getMembers().addAll(members);
+
+        if (callEvent)
+            WorldGuard.getInstance().getEventManager()
+                .call(new AddRegionMembersEvent(this,members));
+    }
     /**
      * Set the members domain.
      *
@@ -432,15 +478,25 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
      * @param <T> the flag type
      * @param <V> the type of the flag's value
      */
-    public <T extends Flag<V>, V> void setFlag(T flag, @Nullable V val) {
+    public <T extends Flag<V>, V> void setFlag(T flag, @Nullable V val, boolean callEvent) {
         checkNotNull(flag);
         setDirty(true);
-
         if (val == null) {
             flags.remove(flag);
         } else {
             flags.put(flag, val);
         }
+
+        //call event
+        if (callEvent)
+            WorldGuard.getInstance().getEventManager().call(new SetFlagRegionEvent(this,flag.getName(),
+                (val == null? null : val.toString())));
+
+
+    }
+
+    public <T extends Flag<V>, V> void setFlag(T flag, @Nullable V val) {
+        setFlag(flag,val,true);
     }
 
     /**

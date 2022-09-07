@@ -139,6 +139,15 @@ public class RegionContainerImpl {
         return manager;
     }
 
+//    public String getWorldName(RegionManager rm){
+//        for (Normal key : mapping.keySet()){
+//            if (mapping.get(key).getName().contains(rm.getName())){
+//                return key.getName();
+//            }
+//        }
+//        return null;
+//    }
+
     /**
      * Unload the region manager associated with the given world name.
      *

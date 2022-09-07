@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.worldguard.events.EventManager;
 import com.sk89q.worldguard.util.profile.cache.HashMapCache;
 import com.sk89q.worldguard.util.profile.cache.ProfileCache;
 import com.sk89q.worldguard.util.profile.cache.SQLiteCache;
@@ -59,6 +60,7 @@ public final class WorldGuard {
     private ProfileCache profileCache;
     private ProfileService profileService;
     private ListeningExecutorService executorService;
+    private EventManager eventManager = new EventManager();
     private WorldGuardExceptionConverter exceptionConverter = new WorldGuardExceptionConverter();
 
     static {
@@ -89,6 +91,10 @@ public final class WorldGuard {
         profileService = getPlatform().createProfileService(profileCache);
 
         getPlatform().load();
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
 
     /**

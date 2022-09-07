@@ -76,6 +76,15 @@ public abstract class RegionContainer {
         }
     }
 
+//    public String getRegionWorldName(ProtectedRegion region){
+//        for (RegionManager rm: getLoaded()){
+//            if (rm.getRegion(region.getId()) != null){
+//                return getWorldName(rm);
+//            }
+//        }
+//        return null;
+//    }
+
     /**
      * Get the region store driver.
      *
@@ -115,6 +124,10 @@ public abstract class RegionContainer {
     public RegionManager get(World world) {
         return container.get(world.getName());
     }
+
+//    public String getWorldName(RegionManager manager){
+//        return container.getWorldName(manager);
+//    }
 
     /**
      * Get an immutable list of loaded {@link RegionManager}s.

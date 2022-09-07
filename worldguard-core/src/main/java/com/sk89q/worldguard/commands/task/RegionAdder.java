@@ -80,7 +80,6 @@ public class RegionAdder implements Callable<ProtectedRegion> {
         }
 
         manager.addRegion(region);
-
         return region;
     }
 

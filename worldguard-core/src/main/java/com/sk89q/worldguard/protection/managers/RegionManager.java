@@ -24,7 +24,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.events.NewRegionEvent;
+import com.sk89q.worldguard.events.RemoveRegionEvent;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.RegionResultSet;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
@@ -230,9 +234,15 @@ public final class RegionManager {
      *
      * @param region the region
      */
-    public void addRegion(ProtectedRegion region) {
+    public void addRegion(ProtectedRegion region, boolean callEvent) {
         checkNotNull(region);
         index.add(region);
+        if (callEvent)
+            WorldGuard.getInstance().getEventManager().call(new NewRegionEvent(region,this));
+    }
+
+    public void addRegion(ProtectedRegion region) {
+        addRegion(region,true);
     }
 
     /**
@@ -277,20 +287,37 @@ public final class RegionManager {
      */
     @Nullable
     public Set<ProtectedRegion> removeRegion(String id) {
-        return removeRegion(id, RemovalStrategy.REMOVE_CHILDREN);
+        return removeRegion(id, RemovalStrategy.REMOVE_CHILDREN,true);
     }
 
+    /**
+     * Remove a region from the index with the given name, opting to remove
+     * the children of the removed region.
+     *
+     * @param id the name of the region
+     * @return a list of removed regions where the first entry is the region specified by {@code id}
+     */
+    @Nullable
+    public Set<ProtectedRegion> removeRegion(String id, RemovalStrategy strategy){
+        return removeRegion(id,strategy,true);
+    }
     /**
      * Remove a region from the index with the given name.
      *
      * @param id the name of the region
      * @param strategy what to do with children
+     * @param callEvent call event?
      * @return a list of removed regions where the first entry is the region specified by {@code id}
      */
     @Nullable
-    public Set<ProtectedRegion> removeRegion(String id, RemovalStrategy strategy) {
-        return index.remove(id, strategy);
-    }
+    public Set<ProtectedRegion> removeRegion(String id, RemovalStrategy strategy, boolean callEvent) {
+        Set<ProtectedRegion> regionSet = index.remove(id, strategy);
+
+        //call event
+        if (callEvent)
+            WorldGuard.getInstance().getEventManager().call(new RemoveRegionEvent(regionSet));
+        return regionSet;
+     }
 
     /**
      * Query for effective flags and members for the given position.
