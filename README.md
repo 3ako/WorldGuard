@@ -2,46 +2,54 @@
     <img src="worldguard-logo.svg" alt="WorldGuard" width="400" /> 
 </h1>
 
-WorldGuard lets you and players guard areas of land against griefers and undesirables, as well as tweak and disable various gameplay features of Minecraft.
+Оригинальный README: [README.md](https://github.com/EngineHub/WorldGuard/blob/master/README.md)
 
-* Block creeper and wither block damage, falling damage, etc.
-* Disable fire spread, lava fire spread, ice formation, Endermen picking up blocks, etc.
-* Blacklist certain items and blocks so they can't be used
-* Warn moderators when certain items and blocks are used
-* Protect areas of your world so only certain people can build in them
-* Set areas where PVP, TNT, mob damage, and other features are disabled
-* Protect your server from various 'exploits' like magical obsidian creation machines
-* Disable, or enable, various Minecraft features, like sponges from classic
-* Add useful commands like an immediate "STOP ALL FIRE SPREAD" command
-* Enable only features you want! Everything is off by default
+Данный Fork имеет систему событий прямо из WorldGuard-Core. <br>
+[Оригинальный WorldGuard](https://worldguard.enginehub.org/en/latest/developer/regions/events/) имеет всего один Event, что мало.<br>
 
-WorldGuard is open source and is available under the GNU Lesser
-General Public License v3.
+Данный форк дополняет WorldGuard. Теперь ядро (WorldGuard-Core) оснащено системой событий, на которые можно подписаться из любых других плагинов.
 
-A Bukkit server implementation (such as [Paper](https://papermc.io)) and the [WorldEdit plugin](https://dev.bukkit.org/projects/worldedit) are required to use WorldGuard. You can get a release copy of WorldGuard from the [BukkitDev site](https://dev.bukkit.org/projects/worldguard).
+## Использование
+Подключите Fork в виде .jar файла любым способом. Например maven:
+``` xml
+<dependency>
+    <groupId>com.sk89q.worldguard</groupId>
+    <artifactId>worldguard-bukkit</artifactId>
+    <version>7.1.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/worldguard-bukkit-7.1.0.jar</systemPath>
+</dependency>
+```
 
-Compiling
----------
+Система событий работает отдельно от системы событий Bukkit. Это позволяет в будущем использовать систему при разработке под Forge и Fabric.<br>
 
-The project is written for Java 16 and our build process makes use of
-[Gradle](http://gradle.org).
+Пример создания слушателя:
+``` java 
+// MyPlugin.java
 
-Dependencies are automatically handled by Gradle.
+EventManager eventManager = WorldGuard.getInstance().getEventManager();
+eventManager.registerListener(new WorldGuardCreateRegion());
 
-Contributing
-------------
+```
+``` java
+// WorldGuardCreateRegion.java
 
-We happily accept contributions, especially through pull requests on GitHub.
+public class WorldGuardCreateRegion implements CreateRegionListener {
 
-Please read CONTRIBUTING.md for important guidelines to follow.
+    @Override
+    public void accept(NewRegionEvent e) {
+        // logic
+    }
+}
 
-Submissions must be licensed under the GNU Lesser General Public License v3.
-
-Links
------
-
-* [Homepage](http://enginehub.org/worldguard)
-* [Discord](https://discord.gg/enginehub)
-* [Issue tracker](https://github.com/EngineHub/WorldGuard/issues)
-* [Continuous integration](http://builds.enginehub.org) [![Build Status](https://ci.enginehub.org/app/rest/builds/buildType:bt11,branch:master/statusIcon.svg)](http://ci.enginehub.org/viewType.html?buildTypeId=bt11&guest=1)
-* [End-user documentation](https://worldguard.enginehub.org/en/latest/)
+```
+## Добавленные события
+| Событие | Класс | Интерфейс слушателя |
+|----------------|:---------:|----------------:|
+| Создание региона | [NewRegionEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/NewRegionEvent.java) | [CreateRegionListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/CreateRegionListener.java) |
+| Удаление регионов | [RemoveRegionEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/RemoveRegionEvent.java) | [RemoveRegionListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/RemoveRegionListener.java) |
+| Установка флага | [SetFlagRegionEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/SetFlagRegionEvent.java) | [SetFlagRegionListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/SetFlagRegionListener.java) |
+| Добавление владельцев | [AddRegionOwnersEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/AddRegionOwnersEvent.java) | [AddRegionOwnersListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/AddRegionOwnersListener.java) |
+| Удаление владельцев | [RemoveRegionOwnersEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/RemoveRegionOwnersEvent.java) | [RemoveRegionOwnersListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/RemoveRegionOwnersListener.java) |
+| Добавление участников | [AddRegionMembersEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/AddRegionMembersEvent.java) | [AddRegionMembersListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/AddRegionMembersListener.java) |
+| Удаление участников | [RemoveRegionMembersEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/RemoveRegionMembersEvent.java) | [RemoveRegionMembersListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/RemoveRegionMembersListener.java) |
