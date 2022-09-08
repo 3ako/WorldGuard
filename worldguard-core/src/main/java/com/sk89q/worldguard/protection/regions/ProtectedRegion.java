@@ -497,7 +497,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
         //call event
         if (callEvent){
             String value;
-            if (val.toString().equals("DENY") || val.toString().equals("ALLOW")){
+            if (val != null && (val.toString().equals("DENY") || val.toString().equals("ALLOW"))){
                 value = val.toString();
             }else {
                 value = "none";
