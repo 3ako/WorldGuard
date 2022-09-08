@@ -27,14 +27,14 @@ import java.util.ArrayList;
  * Designed to manage internal events
  */
 public class EventManager {
-    private ArrayList<CreateRegionListener> createRegionEventListeners = new ArrayList<>();
-    private ArrayList<RemoveRegionListener> removeRegionListeners = new ArrayList<>();
-    private ArrayList<SetFlagRegionListener> setFlagRegionListeners = new ArrayList<>();
-    private ArrayList<AddRegionOwnersListener> addRegionOwnerListeners = new ArrayList<>();
-    private ArrayList<AddRegionMembersListener> addRegionMembersListeners = new ArrayList<>();
-    private ArrayList<RemoveRegionOwnersListener> removeRegionOwnersListeners = new ArrayList<>();
-    private ArrayList<RemoveRegionMembersListener> removeRegionMembersListeners = new ArrayList<>();
-
+    private final ArrayList<CreateRegionListener> createRegionEventListeners = new ArrayList<>();
+    private final ArrayList<RemoveRegionListener> removeRegionListeners = new ArrayList<>();
+    private final ArrayList<SetFlagRegionListener> setFlagRegionListeners = new ArrayList<>();
+    private final ArrayList<AddRegionOwnersListener> addRegionOwnerListeners = new ArrayList<>();
+    private final ArrayList<AddRegionMembersListener> addRegionMembersListeners = new ArrayList<>();
+    private final ArrayList<RemoveRegionOwnersListener> removeRegionOwnersListeners = new ArrayList<>();
+    private final ArrayList<RemoveRegionMembersListener> removeRegionMembersListeners = new ArrayList<>();
+    private final ArrayList<RegionSetPriorityListener> regionSetPriorityListeners = new ArrayList<>();
     public void registerListener(CreateRegionListener listener){
         createRegionEventListeners.add(listener);
     }
@@ -56,9 +56,16 @@ public class EventManager {
     public void registerListener(RemoveRegionMembersListener listener){
         removeRegionMembersListeners.add(listener);
     }
-
+    public void registerListener(RegionSetPriorityListener listener){
+        regionSetPriorityListeners.add(listener);
+    }
     public void call(NewRegionEvent e){
         for (CreateRegionListener listener: createRegionEventListeners){
+            listener.accept(e);
+        }
+    }
+    public void call(RegionSetPriorityEvent e){
+        for (RegionSetPriorityListener listener: regionSetPriorityListeners){
             listener.accept(e);
         }
     }

@@ -172,9 +172,16 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
      *
      * @param priority the priority to set
      */
-    public void setPriority(int priority) {
+    public void setPriority(int priority, boolean callEvent) {
         setDirty(true);
         this.priority = priority;
+
+        if (callEvent){
+            WorldGuard.getInstance().getEventManager().call(new RegionSetPriorityEvent(this,priority));
+        }
+    }
+    public void setPriority(int priority){
+        setPriority(priority,true);
     }
 
     /**
