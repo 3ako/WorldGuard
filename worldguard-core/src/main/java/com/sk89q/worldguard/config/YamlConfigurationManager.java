@@ -59,6 +59,7 @@ public abstract class YamlConfigurationManager extends ConfigurationManager {
         disableDefaultBypass = config.getBoolean("regions.disable-bypass-by-default", false);
         announceBypassStatus = config.getBoolean("regions.announce-bypass-status", false);
 
+
         useGodPermission = config.getBoolean("auto-invincible", config.getBoolean("auto-invincible-permission", false));
         useGodGroup = config.getBoolean("auto-invincible-group", false);
         useAmphibiousGroup = config.getBoolean("auto-no-drowning-group", false);
@@ -67,7 +68,8 @@ public abstract class YamlConfigurationManager extends ConfigurationManager {
         usePlayerTeleports = config.getBoolean("use-player-teleports", true);
         particleEffects = config.getBoolean("use-particle-effects", true);
         disablePermissionCache = config.getBoolean("disable-permission-cache", false);
-
+        loadAttemptInterval = config.getInt("load-attempt-interval",30000);
+        saveInterval = config.getInt("save-interval",30000);
         deopOnJoin = config.getBoolean("security.deop-everyone-on-join", false);
         blockInGameOp = config.getBoolean("security.block-in-game-op-command", false);
 

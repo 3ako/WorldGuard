@@ -21,6 +21,8 @@ package com.sk89q.worldguard.protection.managers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.config.ConfigurationManager;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.index.ChunkHashTable;
 import com.sk89q.worldguard.protection.managers.index.ConcurrentRegionIndex;
@@ -53,10 +55,10 @@ import java.util.logging.Logger;
  * <p>This is an internal class. Do not use it.</p>
  */
 public class RegionContainerImpl {
-
+    private static final ConfigurationManager config = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
     private static final Logger log = Logger.getLogger(RegionContainerImpl.class.getCanonicalName());
-    private static final int LOAD_ATTEMPT_INTERVAL = 1000 * 30;
-    private static final int SAVE_INTERVAL = 1000 * 30;
+    private static final int LOAD_ATTEMPT_INTERVAL = config.loadAttemptInterval;
+    private static final int SAVE_INTERVAL = config.saveInterval;
 
     private final ConcurrentMap<Normal, RegionManager> mapping = new ConcurrentHashMap<>();
     private final Object lock = new Object();
