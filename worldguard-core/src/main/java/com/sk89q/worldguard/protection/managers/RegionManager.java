@@ -24,7 +24,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.events.NewRegionEvent;
@@ -220,7 +219,9 @@ public final class RegionManager {
      */
     public void setRegions(Collection<ProtectedRegion> regions) {
         checkNotNull(regions);
-
+        for (ProtectedRegion pr: regions){
+            pr.setRegionManager(this);
+        }
         ConcurrentRegionIndex newIndex = indexFactory.apply(getName());
         newIndex.addAll(regions);
         newIndex.getAndClearDifference(); // Clear changes
