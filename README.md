@@ -54,3 +54,8 @@ public class WorldGuardCreateRegion implements CreateRegionListener {
 | Добавление участников |    [AddRegionMembersEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/AddRegionMembersEvent.java)    |       [AddRegionMembersListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/AddRegionMembersListener.java) |
 | Удаление участников | [RemoveRegionMembersEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/RemoveRegionMembersEvent.java) | [RemoveRegionMembersListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/RemoveRegionMembersListener.java) |
 | Установка приоритета |   [RegionSetPriorityEvent](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/RegionSetPriorityEvent.java)   |     [RegionSetPriorityListener](https://github.com/3ako/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/events/listeners/RegionSetPriorityListener.java) |
+
+## Изменения в конфигурации
+### Основной конфиг (config.yml)
+- load-attempt-interval (30000 ms.) - Интервал загрузки данных из хранилища
+- save-interval (3000 ms.) - Интервал сохранения изменений кэша в хранилище
