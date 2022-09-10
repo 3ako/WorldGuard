@@ -19,6 +19,7 @@
 
 package com.sk89q.worldguard.events;
 
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import javax.annotation.Nullable;
@@ -28,12 +29,18 @@ public class SetFlagRegionEvent {
     private final ProtectedRegion region;
     private final String flagName;
     private final String value;
+    private final RegionManager regionManager;
 
 
-    public SetFlagRegionEvent(final ProtectedRegion region,String flagName,@Nullable String value){
+    public SetFlagRegionEvent(final ProtectedRegion region, String flagName, @Nullable String value, RegionManager regionManager){
         this.region   = region;
         this.flagName = flagName;
         this.value    = value;
+        this.regionManager = regionManager;
+    }
+
+    public RegionManager getRegionManager() {
+        return regionManager;
     }
 
     public String getFlagName() {

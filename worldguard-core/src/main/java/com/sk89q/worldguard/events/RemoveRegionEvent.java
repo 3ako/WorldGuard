@@ -19,15 +19,22 @@
 
 package com.sk89q.worldguard.events;
 
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import java.util.Set;
 
 public class RemoveRegionEvent {
     private final Set<ProtectedRegion> regions;
+    private final RegionManager regionManager;
 
-    public RemoveRegionEvent(final Set<ProtectedRegion> regions){
+    public RemoveRegionEvent(final Set<ProtectedRegion> regions, RegionManager regionManager){
         this.regions = regions;
+        this.regionManager = regionManager;
+    }
+
+    public RegionManager getRegionManager() {
+        return regionManager;
     }
 
     public Set<ProtectedRegion> getRegions(){

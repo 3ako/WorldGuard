@@ -29,6 +29,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.events.*;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.util.ChangeTracked;
 import com.sk89q.worldguard.util.Normal;
 
@@ -60,7 +61,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
 
     protected BlockVector3 min;
     protected BlockVector3 max;
-
+    private RegionManager regionManager;
     private final String id;
     private final boolean transientRegion;
     private int priority = 0;
@@ -130,6 +131,14 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
     }
 
     /**
+     * Set RegionManager of this region
+     *
+     * @param regionManager
+     */
+    public void setRegionManager(RegionManager regionManager){
+        this.regionManager = regionManager;
+    }
+    /**
      * Return whether this type of region encompasses physical area.
      *
      * @return Whether physical area is encompassed
@@ -177,7 +186,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
         this.priority = priority;
 
         if (callEvent){
-            WorldGuard.getInstance().getEventManager().call(new RegionSetPriorityEvent(this,priority));
+            WorldGuard.getInstance().getEventManager().call(new RegionSetPriorityEvent(this,priority,this.regionManager));
         }
     }
     public void setPriority(int priority){
@@ -240,7 +249,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
 
         if (callEvent){
             WorldGuard.getInstance().getEventManager()
-                    .call(new AddRegionOwnersEvent(this,owners));
+                    .call(new AddRegionOwnersEvent(this,owners,this.regionManager));
         }
     }
 
@@ -253,7 +262,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
         //call event
         if (callEvent)
             WorldGuard.getInstance().getEventManager()
-                .call(new RemoveRegionOwnersEvent(this,owners));
+                .call(new RemoveRegionOwnersEvent(this,owners,this.regionManager));
     }
 
     /**
@@ -293,7 +302,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
 
         if (callEvent)
             WorldGuard.getInstance().getEventManager()
-                .call(new RemoveRegionMembersEvent(this,members));
+                .call(new RemoveRegionMembersEvent(this,members,this.regionManager));
     }
 
     public void addMembers(DefaultDomain members){
@@ -304,7 +313,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
 
         if (callEvent)
             WorldGuard.getInstance().getEventManager()
-                .call(new AddRegionMembersEvent(this,members));
+                .call(new AddRegionMembersEvent(this,members,this.regionManager));
     }
     /**
      * Set the members domain.
@@ -502,7 +511,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
             }else {
                 value = "none";
             }
-            WorldGuard.getInstance().getEventManager().call(new SetFlagRegionEvent(this,flag.getName(),value));
+            WorldGuard.getInstance().getEventManager().call(new SetFlagRegionEvent(this,flag.getName(),value,this.regionManager));
         }
 
 

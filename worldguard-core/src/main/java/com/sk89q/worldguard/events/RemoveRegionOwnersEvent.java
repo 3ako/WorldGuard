@@ -20,17 +20,23 @@
 package com.sk89q.worldguard.events;
 
 import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class RemoveRegionOwnersEvent {
     private final ProtectedRegion region;
     private final DefaultDomain owners;
-    public RemoveRegionOwnersEvent(ProtectedRegion region, DefaultDomain owners){
+    private final RegionManager regionManager;
+    public RemoveRegionOwnersEvent(ProtectedRegion region, DefaultDomain owners, RegionManager regionManager){
         this.region = region;
         this.owners = owners;
+        this.regionManager = regionManager;
     }
 
 
+    public RegionManager getRegionManager() {
+        return regionManager;
+    }
 
     public ProtectedRegion getRegion() {
         return region;

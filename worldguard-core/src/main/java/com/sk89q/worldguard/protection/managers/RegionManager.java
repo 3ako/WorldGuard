@@ -235,6 +235,7 @@ public final class RegionManager {
      * @param region the region
      */
     public void addRegion(ProtectedRegion region, boolean callEvent) {
+        region.setRegionManager(this);
         checkNotNull(region);
         index.add(region);
         if (callEvent)
@@ -315,7 +316,7 @@ public final class RegionManager {
 
         //call event
         if (callEvent)
-            WorldGuard.getInstance().getEventManager().call(new RemoveRegionEvent(regionSet));
+            WorldGuard.getInstance().getEventManager().call(new RemoveRegionEvent(regionSet,this));
         return regionSet;
      }
 

@@ -19,15 +19,22 @@
 
 package com.sk89q.worldguard.events;
 
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class RegionSetPriorityEvent {
     private final ProtectedRegion region;
     private final int priority;
+    private final RegionManager regionManager;
 
-    public RegionSetPriorityEvent(ProtectedRegion region, int priority) {
+    public RegionSetPriorityEvent(ProtectedRegion region, int priority, RegionManager regionManager) {
         this.region = region;
         this.priority = priority;
+        this.regionManager = regionManager;
+    }
+
+    public RegionManager getRegionManager() {
+        return regionManager;
     }
 
     public ProtectedRegion getRegion() {
