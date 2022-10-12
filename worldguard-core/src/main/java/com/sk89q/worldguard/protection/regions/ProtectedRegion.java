@@ -185,7 +185,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
         setDirty(true);
         this.priority = priority;
 
-        if (callEvent){
+        if (callEvent && regionManager != null){
             WorldGuard.getInstance().getEventManager().call(new RegionSetPriorityEvent(this,priority,this.regionManager));
         }
     }
@@ -247,7 +247,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
     public void addOwners(DefaultDomain owners, boolean callEvent){
         this.getOwners().addAll(owners);
 
-        if (callEvent){
+        if (callEvent && regionManager != null){
             WorldGuard.getInstance().getEventManager()
                     .call(new AddRegionOwnersEvent(this,owners,this.regionManager));
         }
@@ -260,7 +260,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
         this.getOwners().removeAll(owners);
 
         //call event
-        if (callEvent)
+        if (callEvent && regionManager != null)
             WorldGuard.getInstance().getEventManager()
                 .call(new RemoveRegionOwnersEvent(this,owners,this.regionManager));
     }
@@ -300,7 +300,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
     public void removeMembers(DefaultDomain members, boolean callEvent){
         this.getMembers().removeAll(members);
 
-        if (callEvent)
+        if (callEvent && regionManager != null)
             WorldGuard.getInstance().getEventManager()
                 .call(new RemoveRegionMembersEvent(this,members,this.regionManager));
     }
@@ -311,7 +311,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
     public void addMembers(DefaultDomain members, boolean callEvent){
         this.getMembers().addAll(members);
 
-        if (callEvent)
+        if (callEvent && regionManager != null)
             WorldGuard.getInstance().getEventManager()
                 .call(new AddRegionMembersEvent(this,members,this.regionManager));
     }
@@ -504,7 +504,7 @@ public abstract class ProtectedRegion implements ChangeTracked, Comparable<Prote
         }
 
         //call event
-        if (callEvent){
+        if (callEvent && regionManager != null){
             String value;
             if (val != null && (val.toString().equals("DENY") || val.toString().equals("ALLOW"))){
                 value = val.toString();
