@@ -87,14 +87,14 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
      * Add region name, type, and priority.
      */
     public void appendBasics() {
-        builder.append(TextComponent.of("Region: ", TextColor.BLUE));
+        builder.append(TextComponent.of("Регион: ", TextColor.BLUE));
         builder.append(TextComponent.of(region.getId(), TextColor.YELLOW)
                 .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg info -w \"" + world + "\" " + region.getId())));
         
-        builder.append(TextComponent.of(" (type=", TextColor.GRAY));
+        builder.append(TextComponent.of(" (тип=", TextColor.GRAY));
         builder.append(TextComponent.of(region.getType().getName()));
         
-        builder.append(TextComponent.of(", priority=", TextColor.GRAY));
+        builder.append(TextComponent.of(", приоритет=", TextColor.GRAY));
         appendPriorityComponent(region);
         builder.append(TextComponent.of(")", TextColor.GRAY));
 
@@ -105,7 +105,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
      * Add information about flags.
      */
     public void appendFlags() {
-        builder.append(TextComponent.of("Flags: ", TextColor.BLUE));
+        builder.append(TextComponent.of("Флаги: ", TextColor.BLUE));
         
         appendFlagsList(true);
         
@@ -179,8 +179,8 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
 
         if (perms != null && perms.maySetFlag(region)) {
             builder.append(TextComponent.space())
-                    .append(TextComponent.of("[Flags]", useColors ? TextColor.GREEN : TextColor.GRAY)
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Click to set a flag")))
+                    .append(TextComponent.of("[Флаги]", useColors ? TextColor.GREEN : TextColor.GRAY)
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Нажми, чтобы установить флаг")))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg flags -w \"" + world + "\" " + region.getId())));
         }
     }
@@ -241,7 +241,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
             
             // Put (parent)
             if (!cur.equals(region)) {
-                builder.append(TextComponent.of(" (parent, priority=", useColors ? TextColor.GRAY : TextColor.WHITE));
+                builder.append(TextComponent.of(" (родитель, приоритет=", useColors ? TextColor.GRAY : TextColor.WHITE));
                 appendPriorityComponent(cur);
                 builder.append(TextComponent.of(")", useColors ? TextColor.GRAY : TextColor.WHITE));
             }
@@ -262,13 +262,13 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
      * Add information about members.
      */
     public void appendDomain() {
-        builder.append(TextComponent.of("Owners: ", TextColor.BLUE));
+        builder.append(TextComponent.of("Владельцы: ", TextColor.BLUE));
         addDomainString(region.getOwners(),
                 perms != null && perms.mayAddOwners(region) ? "addowner" : null,
                 perms != null && perms.mayRemoveOwners(region) ? "removeowner" : null);
         newline();
 
-        builder.append(TextComponent.of("Members: ", TextColor.BLUE));
+        builder.append(TextComponent.of("Участники: ", TextColor.BLUE));
         addDomainString(region.getMembers(),
                 perms != null && perms.mayAddMembers(region) ? "addmember" : null,
                 perms != null && perms.mayRemoveMembers(region) ? "removemember" : null);
@@ -309,11 +309,11 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
     public void appendBounds() {
         BlockVector3 min = region.getMinimumPoint();
         BlockVector3 max = region.getMaximumPoint();
-        builder.append(TextComponent.of("Bounds:", TextColor.BLUE));
+        builder.append(TextComponent.of("Границы:", TextColor.BLUE));
         TextComponent bound = TextComponent.of(" " + min + " -> " + max, TextColor.YELLOW);
         if (perms != null && perms.maySelect(region)) {
             bound = bound
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Click to select")))
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Нажми, чтобы выделить")))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg select " + region.getId()));
         }
         builder.append(bound);
@@ -321,7 +321,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         if (teleFlag != null && perms != null && perms.mayTeleportTo(region)) {
             builder.append(TextComponent.space().append(TextComponent.of("[Teleport]", TextColor.GRAY)
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of("Click to teleport").append(TextComponent.newline()).append(
+                            TextComponent.of("Нажми для телепорта").append(TextComponent.newline()).append(
                                     TextComponent.of(teleFlag.getBlockX() + ", "
                                             + teleFlag.getBlockY() + ", "
                                             + teleFlag.getBlockZ()))))
@@ -330,7 +330,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         } else if (perms != null && perms.mayTeleportToCenter(region) && region.isPhysicalArea()) {
             builder.append(TextComponent.space().append(TextComponent.of("[Center Teleport]", TextColor.GRAY)
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of("Click to teleport to the center of the region")))
+                            TextComponent.of("Нажми для телепорта в центр региона")))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND,
                             "/rg tp -c -w \"" + world + "\" " + region.getId()))));
         }
@@ -363,7 +363,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
 
     @Override
     public TextComponent call() {
-        MessageBox box = new MessageBox("Region Info", builder);
+        MessageBox box = new MessageBox("Информация о регионе", builder);
         appendRegionInformation();
         return box.create();
     }
